@@ -41,67 +41,90 @@ for each wear category.</p>
 ```python
 from collections import defaultdict
 from itertools import combinations
+
 # Function to generate candidate k-item sequences
 def generate_candidates(dataset, k):
+    counts = defaultdict(int)
+
+    for sequence in dataset:
+        candidates = set(combinations(sequence, k))
+
+        for candidate in candidates:
+            counts[candidate] += 1
+
+    return counts
 
 
-    /WRITE YOUR CODE HERE/
-
-
-#Function to perform GSP algorithm
+# Function to perform GSP-style sequential pattern mining
 def gsp(dataset, min_support):
+    frequent_patterns = {}
+    k = 1
+
+    while True:
+        candidates = generate_candidates(dataset, k)
+
+        frequent_k = {
+            pattern: support
+            for pattern, support in candidates.items()
+            if support >= min_support
+        }
+
+        if not frequent_k:
+            break
+
+        frequent_patterns.update(frequent_k)
+        k += 1
+
+    return frequent_patterns
 
 
-  /WRITE YOUR CODE HERE/
-
-
-#Example dataset for each category
+# Example sequence datasets
 top_wear_data = [
- ["blouse", "t-shirt", "tank_top"],
- ["hoodie", "sweater", "top"],["hoodie"],["hoodie","sweater"]
- #Add more sequences for top wear
+    ["blouse", "t-shirt", "tank_top"],
+    ["hoodie", "sweater", "top"],
+    ["hoodie"],
+    ["hoodie", "sweater"]
 ]
+
 bottom_wear_data = [
- ["jeans", "trousers", "shorts"],
- ["leggings", "skirt", "chinos"],
- # Add more sequences for bottom wear
+    ["jeans", "trousers", "shorts"],
+    ["leggings", "skirt", "chinos"]
 ]
+
 party_wear_data = [
- ["cocktail_dress", "evening_gown", "blazer"],
- ["party_dress", "formal_dress", "suit"],
- ["party_dress", "formal_dress", "suit"],
- ["party_dress", "formal_dress", "suit"],
- ["party_dress", "formal_dress", "suit"],
- ["party_dress"],["party_dress"],
- # Add more sequences for party wear
+    ["cocktail_dress", "evening_gown", "blazer"],
+    ["party_dress", "formal_dress", "suit"],
+    ["party_dress", "formal_dress", "suit"],
+    ["party_dress", "formal_dress", "suit"],
+    ["party_dress", "formal_dress", "suit"],
+    ["party_dress"],
+    ["party_dress"]
 ]
-#Minimum support threshold
+
+# Minimum support count
 min_support = 2
-#Perform GSP algorithm for each category
+
+# Apply GSP to each category
 top_wear_result = gsp(top_wear_data, min_support)
 bottom_wear_result = gsp(bottom_wear_data, min_support)
 party_wear_result = gsp(party_wear_data, min_support)
-#Output the frequent sequential patterns for each category
+
+# Display results
 print("Frequent Sequential Patterns - Top Wear:")
-if top_wear_result:
- for pattern, support in top_wear_result.items():
- print(f"Pattern: {pattern}, Support: {support}")
-else:
- print("No frequent sequential patterns found in Top Wear.")
+for pattern, support in top_wear_result.items():
+    print(f"Pattern: {pattern}, Support: {support}")
+
 print("\nFrequent Sequential Patterns - Bottom Wear:")
-if bottom_wear_result:
- for pattern, support in bottom_wear_result.items():
- print(f"Pattern: {pattern}, Support: {support}")
-else:
- print("No frequent sequential patterns found in Bottom Wear.")
+for pattern, support in bottom_wear_result.items():
+    print(f"Pattern: {pattern}, Support: {support}")
+
 print("\nFrequent Sequential Patterns - Party Wear:")
-if party_wear_result:
- for pattern, support in party_wear_result.items():
- print(f"Pattern: {pattern}, Support: {support}")
-else:
- print("No frequent sequential patterns found in Party Wear.")
+for pattern, support in party_wear_result.items():
+    print(f"Pattern: {pattern}, Support: {support}")
 ```
 ### Output:
+
+<img width="1271" height="316" alt="image" src="https://github.com/user-attachments/assets/a46181d9-04e8-4189-99cf-f9def2582849" />
 
 ### Visualization:
 ```python
@@ -131,5 +154,8 @@ visualize_patterns_line(party_wear_result, 'Party Wear')
 ```
 ### Output:
 
+<img width="713" height="805" alt="image" src="https://github.com/user-attachments/assets/d038a1fb-5b5c-4832-b3ec-860702098e49" />
+
 
 ### Result:
+The GSP algorithm successfully generated frequent sequential patterns for both datasets.
